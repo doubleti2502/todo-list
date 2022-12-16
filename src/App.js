@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import TaskList from './components/TaskList';
 import TaskForm from './components/TaskForm';
 import TaskControl from './components/TaskControl';
 
 function App(){
-    const [tasks, setTasks] = useState(JSON.parse(localStorage.getItem('tasks')|| []));
+    const [tasks, setTasks] = useState([]);
     const [isDisplayForm, setIsDisplayForm] = useState(false)
     const [keyword, setKeyword] = useState('')
     const [itemEditing, setItemEditing] = useState(null)
@@ -13,6 +13,10 @@ function App(){
     const [filterStatus, setFilterStatus] = useState('-1')
     const [sortBy, setSortBy] = useState('name')
     const [sortValue, setSortValue] = useState('1')
+
+    useEffect(() => {
+        setTasks(JSON.parse(localStorage.getItem('tasks') || []))
+    },[])
 
     const s4 = () => {
         return  Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -38,7 +42,7 @@ function App(){
         const updatedTask = [...tasks]
         updatedTask[index].status = !tasks[index].status;
         setTasks(updatedTask)
-        localStorage.setItem('tasks', JSON.stringify(tasks));
+        localStorage.setItem('tasks', JSON.stringify(updatedTask));
     }
 
     const onHandleSave = (data) => {
@@ -52,7 +56,7 @@ function App(){
             updatedTask[index] = data;
         }
         setTasks(updatedTask)
-        localStorage.setItem('tasks', JSON.stringify(tasks));
+        localStorage.setItem('tasks', JSON.stringify(updatedTask));
     }
 
 
@@ -74,7 +78,7 @@ function App(){
         const index = findIndex(id);
         updatedTasks.splice(index, 1);
         setTasks(updatedTasks)
-        localStorage.setItem('tasks', JSON.stringify(tasks));
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
         onExitForm();
     }
 
